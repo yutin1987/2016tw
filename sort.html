@@ -357,10 +357,10 @@ function topic(topic, i) {
     z,
   ];
 
-  topic.count = parseInt(y / sum * 100) - parseInt(x / sum * 100);
+  topic.count = parseInt(x / sum * 100) - parseInt(y / sum * 100);
   topic.diff = topic.count;
 
-  console.log(topic.name, parseInt(y / sum * 100), parseInt(x / sum * 100), topic.count);
+  console.log(topic.name, parseInt(x / sum * 100), parseInt(y / sum * 100), topic.count);
 
   if (max > topic.count) {
     max = topic.count;
