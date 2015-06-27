@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body id="interactiveABC" class="interactiveABC">
+<a name="top"></a>
+<div id="shell">
+
+<ul id="memberTools">
+
+<!-- ADXINFO classification="Text_Link" campaign="inyt2015_bar1_digi_jun_Q2_4QQLW" priority="9000" isInlineSafe="Y" width="0" height="0" --><!-- INYT Sale Bar1 20140929 ~dj.paris -->
+
+<style>
+.NYT5Style .masthead-tools #bar1-singlepanel  {
+    display: inline;
+    vertical-align: top;
+}
+#bar1-singlepanel {
+    border:none;
+    position: relative;
+}
+.bar1_hover {
+    opacity: 0;
+}
+.sub_small_hide{
+    display: none;
+}
+#bar1-singlepanel > a {
+    -moz-box-sizing: border-box;
+    background-color: #6288A5;
+    border: 1px solid #4D7B9F;
+    border-radius: 3px;
+    color: #FFFFFF !important;
+    display: inline-block;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: nyt-franklin,nyt-franklin-1,'Helvetica Neue',Arial,sans-serif;
+    padding: 7px 10px 6px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+#bar1-singlepanel > a:hover {
+    background-color: #326891;
+    border: 1px solid #265E8B;
+    text-decoration: none;
+}
+#hovercard {
+    width: 450px;
+    height: 328px;
+    display:none;
+    margin-left: -360px;
+    z-index: 99999999;
+    background-color:#fff;
+    border: 0;
+    position:absolute;
+    left: 50%;
+    top: 30px;
+    text-align:left;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px #888;
+    box-shadow: 0 0 5px #888;
+    white-space: normal;
+}
+#hovercard:after {
+        bottom: 100%;
+  left: 350px;
+  border: solid transparent;
+  content: " ";
+  width: 0;
+  height: 0;
+  position: absolute;
+  pointer-events: none;
+  border-bottom-color: #CFF3F1;
+  border-width: 8px;
+  margin: 0;
+}
+.NYT5Style #hovercard {
+        top: 18px;
+}
+.NYT5Style #hovercard  a:hover {
+  background-color: #414042;
+}
+/* WEBKIT ONLY RULES */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  #hovercard {
+    top: 31px !important;
+  }
+  .NYT5Style #hovercard {
+    top: 28px !important;
+    margin-left: -283px;
+  }
+  .NYT5Style #hovercard:after {
+    left: 273px;
+  }
+}
+/* EXCLUDING NYT4 INTERACTIVES */
+#interactiveABC #bar1-singlepanel {
+   display: none;
+}
+</style>
+
+<div id="page" class="tabContent active">
+<div class="clearfix" id="masthead">
+
+<div id="main">
+<div id="interactiveShell">
+<div class="columnGroup firstColumnGroup">
+<div class="ledeStory">
+<div id="interactiveFreeFormMain">
+<meta name="viewport" content="width=990">
+<link rel="stylesheet" type="text/css" href="sort.css"/>
+<div id="g-chart">
+<div class="g-legend" style="position:absolute;width:970px;">
+</div>
+<div class="g-labels"></div>
+<svg class="g-nodes" width="970" height="540">
+<path class="g-note-arrow" id="g-arrow-auto" d="M58,425v-160"></path>
+<path class="g-note-arrow" id="g-arrow-women" d="M308,425v-100"></path>
+<path class="g-note-arrow" id="g-arrow-business" d="M630,425v-45l60,-60"></path>
+<path class="g-note-arrow" id="g-arrow-unemployment" d="M885,425v-180"></path>
+</svg>
+</div>
+<p>
+<!--<![endif]-->
+<!--pipeline: ac823b240e99920e91945dbec49f35b268c09c38 -->    </div><!--close main free form -->
+
+</div><!--close .ledeStory -->
+</div><!--close .columnGroup -->
+</div><!--close #interactiveShell -->
+</div><!--close #main -->
+
+</div><!--close #page -->
+</div><!--close #shell -->
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+var data = {};
+
+(function() {
+
+data.speakers = {
+};
+
+data.topics = [
+  {
+    "name": "基隆市",
+    "民進黨": 79562,
+    "國民黨": 128294,
+    "親民黨": 8533,
+    "無效票": 1414,
+    "已領未投": 3,
+    "未領票": 84333
+  },
+  {
+    "name": "臺北市",
+    "民進黨": 634565,
+    "國民黨": 928717,
+    "親民黨": 41448,
+    "無效票": 9669,
+    "已領未投": 58,
+    "未領票": 488207
+  },
+  {
+    "name": "新北市",
+    "民進黨": 1007551,
+    "國民黨": 1245673,
+    "親民黨": 65269,
+    "無效票": 15215,
+    "已領未投": 58,
+    "未領票": 741083
+  },
+  {
+    "name": "桃園縣",
+    "民進黨": 445308,
+    "國民黨": 639151,
+    "親民黨": 32927,
+    "無效票": 7610,
+    "已領未投": 12,
+    "未領票": 381303
+  },
+  {
+    "name": "新竹市",
+    "民進黨": 92632,
+    "國民黨": 134728,
+    "親民黨": 7216,
+    "無效票": 1628,
+    "已領未投": 7,
+    "未領票": 75907
+  },
+  {
+    "name": "新竹縣",
+    "民進黨": 89741,
+    "國民黨": 190797,
+    "親民黨": 9599,
+    "無效票": 2176,
+    "已領未投": 2,
+    "未領票": 91946
+  },
+  {
+    "name": "苗栗縣",
+    "民進黨": 107164,
+    "國民黨": 206200,
+    "親民黨": 9597,
+    "無效票": 2600,
+    "已領未投": 6,
+    "未領票": 110652
+  },
+  {
+    "name": "臺中市",
+    "民進黨": 678736,
+    "國民黨": 792334,
+    "親民黨": 48030,
+    "無效票": 9953,
+    "已領未投": 23,
+    "未領票": 489082
+  },
+  {
+    "name": "彰化縣",
+    "民進黨": 340069,
+    "國民黨": 369968,
+    "親民黨": 21403,
+    "無效票": 7367,
+    "已領未投": 6,
+    "未領票": 266901
+  },
+  {
+    "name": "南投縣",
+    "民進黨": 123077,
+    "國民黨": 158703,
+    "親民黨": 8726,
+    "無效票": 2165,
+    "已領未投": 9,
+    "未領票": 118802
+  },
+  {
+    "name": "雲林縣",
+    "民進黨": 214141,
+    "國民黨": 159891,
+    "親民黨": 9662,
+    "無效票": 4348,
+    "已領未投": 4,
+    "未領票": 174988
+  },
+  {
+    "name": "嘉義市",
+    "民進黨": 76711,
+    "國民黨": 69535,
+    "親民黨": 4042,
+    "無效票": 973,
+    "已領未投": 0,
+    "未領票": 54450
+  },
+  {
+    "name": "嘉義縣",
+    "民進黨": 181463,
+    "國民黨": 120946,
+    "親民黨": 7364,
+    "無效票": 3052,
+    "已領未投": 6,
+    "未領票": 118757
+  },
+  {
+    "name": "臺南市",
+    "民進黨": 631232,
+    "國民黨": 435274,
+    "親民黨": 27066,
+    "無效票": 8090,
+    "已領未投": 19,
+    "未領票": 383366
+  },
+  {
+    "name": "高雄市",
+    "民進黨": 883158,
+    "國民黨": 730461,
+    "親民黨": 39469,
+    "無效票": 10944,
+    "已領未投": 19,
+    "未領票": 527954
+  },
+  {
+    "name": "屏東縣",
+    "民進黨": 271722,
+    "國民黨": 211571,
+    "親民黨": 9562,
+    "無效票": 4571,
+    "已領未投": 9,
+    "未領票": 187082
+  },
+  {
+    "name": "臺東縣",
+    "民進黨": 33417,
+    "國民黨": 72823,
+    "親民黨": 3313,
+    "無效票": 1019,
+    "已領未投": 6,
+    "未領票": 68360
+  },
+  {
+    "name": "花蓮縣",
+    "民進黨": 43845,
+    "國民黨": 118815,
+    "親民黨": 6359,
+    "無效票": 1570,
+    "已領未投": 1,
+    "未領票": 93298
+  },
+  {
+    "name": "宜蘭縣",
+    "民進黨": 135156,
+    "國民黨": 115496,
+    "親民黨": 6652,
+    "無效票": 2437,
+    "已領未投": 3,
+    "未領票": 98315
+  },
+  {
+    "name": "澎湖縣",
+    "民進黨": 20717,
+    "國民黨": 22579,
+    "親民黨": 2082,
+    "無效票": 543,
+    "已領未投": 0,
+    "未領票": 31896
+  },
+  {
+    "name": "金門縣",
+    "民進黨": 3193,
+    "國民黨": 34676,
+    "親民黨": 990,
+    "無效票": 316,
+    "已領未投": 0,
+    "未領票": 44774
+  },
+  {
+    "name": "連江縣",
+    "民進黨": 418,
+    "國民黨": 4507,
+    "親民黨": 279,
+    "無效票": 51,
+    "已領未投": 0,
+    "未領票": 2732
+  }
+];
+
+var max = 0;
+
+function topic(topic, i) {
+  topic.id = i;
+  topic.count = 0;
+
+  var x = parseInt(topic['國民黨']/1000);
+  var y = parseInt(topic['民進黨']/1000);
+  var z = parseInt((topic['親民黨'] + topic['無效票'] + topic['已領未投'] + topic['未領票']) / 1000);
+  var sum = x + y + z;
+
+  topic.parties = [
+    x,
+    y,
+    z,
+  ];
+
+  topic.count = parseInt(y / sum * 100) - parseInt(x / sum * 100);
+  topic.diff = topic.count;
+
+  console.log(topic.name, parseInt(y / sum * 100), parseInt(x / sum * 100), topic.count);
+
+  if (max > topic.count) {
+    max = topic.count;
+  }
+
+  return topic;
+}
+
+data.topics.map(topic).map(function(topic) {
+  topic.count += Math.abs(max);
+});
+
+function party(party) {
+  party.speeches = party.speeches.map(speech);
+  party.sections = sections(party.speeches);
+  party.wordCount = d3.sum(party.sections, function(d) { return countWords(d.speech.text.substring(d.i, d.j)); });
+  return party;
+}
+
+function speech(text, i) {
+  return {text: text, id: i};
+}
+
+function sections(speeches) {
+  var speakerRe = /(?:\n|^)([A-Z\.()\- ]+): /g,
+      sections = [];
+
+  speeches.forEach(function(speech) {
+    var speakerName = "AUDIENCE",
+        match,
+        i = speakerRe.lastIndex = 0;
+    while (match = speakerRe.exec(speech.text)) {
+      if (match.index > i) sections.push({speaker: speakerName, speech: speech, i: i, j: match.index});
+      speakerName = match[1];
+      i = speakerRe.lastIndex;
+    }
+    sections.push({speaker: speakerName, speech: speech, i: i, j: speech.text.length});
+  });
+
+  return sections.filter(function(d) { return !/^AUDIENCE\b/.test(d.speaker); });
+}
+
+function countWords(text) {
+  return text.split(/\s+/g)
+      .filter(function(d) { return d !== "��"; })
+      .length;
+}
+
+})();
+
+(function() {
+
+var width = 970,
+    height = 540;
+
+var collisionPadding = 4,
+    clipPadding = 4,
+    minRadius = 16, // minimum collision radius
+    maxRadius = 65, // also determines collision search radius
+    maxMentions = 100, // don't show full transcripts
+    activeTopic; // currently-displayed topic
+
+var formatShortCount = d3.format(",.0f"),
+    formatLongCount = d3.format(".1f"),
+    formatCount = function(d) { return (d < 10 ? formatLongCount : formatShortCount)(d); };
+
+var r = d3.scale.sqrt()
+    .domain([0, d3.max(data.topics, function(d) { return d.count; })])
+    .range([0, maxRadius]);
+
+var force = d3.layout.force()
+    .charge(0)
+    .size([width, height - 80])
+    .on("tick", tick);
+
+var node = d3.select(".g-nodes").selectAll(".g-node"),
+    label = d3.select(".g-labels").selectAll(".g-label"),
+    arrow = d3.select(".g-nodes").selectAll(".g-note-arrow");
+
+d3.select(".g-nodes").append("rect")
+    .attr("class", "g-overlay")
+    .attr("width", width)
+    .attr("height", height)
+    .on("click", clear);
+
+d3.select(window)
+    .on("hashchange", hashchange);
+
+d3.select("#g-form")
+    .on("submit", submit);
+
+updateTopics(data.topics);
+hashchange();
+
+// Update the known topics.
+function updateTopics(topics) {
+  topics.forEach(function(d) {
+    d.r = r(d.count);
+    d.cr = Math.max(minRadius, d.r);
+    d.k1 = fractionA(d.parties[0], d.parties[1], d.parties[2]);
+    d.k2 = fractionB(d.parties[0], d.parties[1], d.parties[2]);
+    if (isNaN(d.x)) d.x = (1 - d.k1) * width + Math.random();
+    d.bias = .5 - Math.max(.1, Math.min(.9, d.k1));
+  });
+  force.nodes(data.topics = topics).start();
+  updateNodes();
+  updateLabels();
+  updateArrows();
+  tick({alpha: 0}); // synchronous update
+}
+
+// Update the displayed nodes.
+function updateNodes() {
+  node = node.data(data.topics, function(d) { return d.name; });
+
+  node.exit().remove();
+
+  var nodeEnter = node.enter().append("a")
+      .attr("class", "g-node")
+      .attr("xlink:href", function(d) { return "#" + encodeURIComponent(d.name); })
+      .call(force.drag)
+      .call(linkTopic);
+
+  var democratEnter = nodeEnter.append("g")
+      .attr("class", "g-democrat");
+
+  democratEnter.append("clipPath")
+      .attr("id", function(d) { return "g-clip-democrat-" + d.id; })
+    .append("rect");
+
+  democratEnter.append("circle");
+
+  var republicanEnter = nodeEnter.append("g")
+      .attr("class", "g-republican");
+
+  republicanEnter.append("clipPath")
+      .attr("id", function(d) { return "g-clip-republican-" + d.id; })
+    .append("rect");
+
+  republicanEnter.append("circle");
+
+  var splitEnter = nodeEnter.append("g")
+      .attr("class", "g-split");
+
+  splitEnter.append("clipPath")
+      .attr("id", function(d) { return "g-clip-split-" + d.id; })
+    .append("rect");
+
+  splitEnter.append("circle");
+
+  node.selectAll("rect")
+      .attr("y", function(d) { return -d.r; })
+      .attr("height", function(d) { return 2 * d.r + 2; });
+
+  node.select(".g-democrat rect")
+      .attr("x", function(d) { return -d.r; })
+      .attr("width", function(d) { return 2 * d.r * d.k1; });
+
+  node.select(".g-republican rect")
+      .attr("x", function(d) { return -d.r + 2 * d.r * (1 - d.k2); })
+      .attr("width", function(d) { return 2 * d.r; });
+
+  node.select(".g-split rect")
+      .attr("x", function(d) { return -d.r + 2 * d.r * d.k1; })
+      .attr("width", function(d) { return 2 * d.r * (1 - d.k1 - d.k2); });
+
+  node.select(".g-democrat circle")
+      .attr("clip-path", function(d) { return "url(#g-clip-democrat-" + d.id + ")"; });
+
+  node.select(".g-republican circle")
+      .attr("clip-path", function(d) { return "url(#g-clip-republican-" + d.id + ")"; });
+
+  node.select(".g-split circle")
+      .attr("clip-path", function(d) { return "url(#g-clip-split-" + d.id + ")"; });
+
+  // node.select(".g-split")
+  //     .attr("x1", function(d) { return -d.r + 2 * d.r * d.k1; })
+  //     .attr("y1", function(d) { return -Math.sqrt(d.r * d.r - Math.pow(-d.r + 2 * d.r * d.k1, 2)); })
+  //     .attr("x2", function(d) { return -d.r + 2 * d.r * (1 - d.k2); })
+  //     .attr("y2", function(d) { return Math.sqrt(d.r * d.r - Math.pow(-d.r + 2 * d.r * (1 - d.k2), 2)); });
+
+  node.selectAll("circle")
+      .attr("r", function(d) { return r(d.count); });
+}
+
+// Update the displayed node labels.
+function updateLabels() {
+  label = label.data(data.topics, function(d) { return d.name; });
+
+  label.exit().remove();
+
+  var labelEnter = label.enter().append("a")
+      .attr("class", "g-label")
+      .attr("href", function(d) { return "#" + encodeURIComponent(d.name); })
+      .call(force.drag)
+      .call(linkTopic);
+
+  labelEnter.append("div")
+      .attr("class", "g-name")
+      .text(function(d) { return d.name; });
+
+  labelEnter.append("div")
+      .attr("class", "g-value");
+
+  label
+      .style("font-size", function(d) { return Math.max(8, d.r / 2) + "px"; })
+      .style("width", function(d) { return d.r * 2.5 + "px"; });
+
+  // Create a temporary span to compute the true text width.
+  label.append("span")
+      .text(function(d) { return d.name; })
+      .each(function(d) { d.dx = Math.max(d.r * 2.5, this.getBoundingClientRect().width); })
+      .remove();
+
+  label
+      .style("width", function(d) { return d.dx + "px"; })
+    .select(".g-value")
+      .text(function(d) { return formatShortCount(d.parties[0]) + "k - " + d.parties[2] + " - " + formatShortCount(d.parties[1]) + "k"; });
+
+  // Compute the height of labels when wrapped.
+  label.each(function(d) { d.dy = this.getBoundingClientRect().height; });
+}
+
+// Update the active topic.
+function updateActiveTopic(topic) {
+  d3.selectAll(".g-head").attr("class", topic ? "g-head g-has-topic" : "g-head g-hasnt-topic");
+  if (activeTopic = topic) {
+    node.classed("g-selected", function(d) { return d === topic; });
+    updateMentions(findMentions(topic));
+    d3.selectAll(".g-head a").text(topic.name);
+    d3.select(".g-democrat .g-head span.g-count").text(formatCount(topic.parties[0].count));
+    d3.select(".g-republican .g-head span.g-count").text(formatCount(topic.parties[1].count));
+  } else {
+    node.classed("g-selected", false);
+    updateMentions(sampleMentions());
+    d3.selectAll(".g-head a").text("various topics");
+    d3.selectAll(".g-head span.g-count").text("some number of");
+  }
+}
+
+// Update displayed excerpts.
+function updateMentions(mentions) {
+  var column = d3.selectAll(".g-mentions")
+      .data(mentions);
+
+  column.select(".g-truncated")
+      .style("display", function(d) { return d.truncated ? "block" : null; });
+
+  var mention = column.selectAll(".g-mention")
+      .data(groupMentionsBySpeaker, function(d) { return d.key; });
+
+  mention.exit().remove();
+
+  mention.selectAll("p")
+      .remove();
+
+  var mentionEnter = mention.enter().insert("div", ".g-truncated")
+      .attr("class", "g-mention");
+
+  mentionEnter.append("div")
+      .attr("class", "g-speaker")
+      .text(function(d) { var s = data.speakers[d.key]; return s ? s.name : d.key; });
+
+  mentionEnter.append("div")
+      .attr("class", "g-speaker-title")
+      .text(function(d) { var s = data.speakers[d.key]; return s && s.title; });
+
+  mention
+      .sort(function(a, b) { return b.values.length - a.values.length; });
+
+  var p = mention.selectAll("p")
+      .data(function(d) { return d.values; })
+    .enter().append("p")
+      .html(function(d) { return d.section.speech.text.substring(d.start, d.end).replace(d.topic.re, "<a>$1</a>"); });
+
+  if (activeTopic) {
+    p.attr("class", "g-hover");
+  } else {
+    p.each(function(d) {
+      d3.select(this).selectAll("a")
+          .datum(d.topic)
+          .attr("href", "#" + encodeURIComponent(d.topic.name))
+          .call(linkTopic);
+    });
+  }
+}
+
+// Bind the arrow path elements with their associated topic.
+function updateArrows() {
+  arrow = arrow.data(
+      data.topics.filter(function(d) { return d.arrow; }),
+      function(d) { return this.id ? this.id.substring(8) : d.arrow; });
+}
+
+// Return a random sample of mentions per party, one per topic.
+// Mentions are returned in chronological order.
+function sampleMentions() {
+}
+
+// Return displayable mentions per party for the specified topic.
+// If too many, a random sample of matching mentions is returned.
+// Mentions are returned in chronological order.
+function findMentions(topic) {
+  return data.parties.map(function(party, i) {
+    var mentions = topic.parties[i].mentions;
+    if (mentions.length > maxMentions) {
+      shuffle(mentions).length = maxMentions;
+      mentions.sort(orderMentions);
+      mentions.truncated = true;
+    }
+    return mentions;
+  });
+}
+
+// Group mentions by speaker, collapse overlapping excerpts.
+function groupMentionsBySpeaker(mentions) {
+  return d3.nest()
+      .key(function(d) { return d.section.speaker; })
+      .rollup(collapseMentions)
+      .entries(mentions);
+}
+
+// Given an array of mentions, computes the start and end point of the context
+// excerpt, and then collapses any overlapping excerpts.
+function collapseMentions(mentions) {
+  var sentenceRe = /([!?.)]+)\s+/g, // sentence splitting requires NLP
+      i,
+      n = mentions.length,
+      d0,
+      d1;
+
+  // First compute the excerpt contexts.
+  for (i = 0; i < n; ++i) {
+    d0 = mentions[i];
+    d0.start = excerptStart(d0);
+    d0.end = excerptEnd(d0);
+  }
+
+  // Then collapse any overlapping excerpts (from the same speech).
+  for (i = 1, d1 = mentions[0]; i < n; ++i) {
+    d0 = d1;
+    d1 = mentions[i];
+    if (d1.section.speech.id === d0.section.speech.id
+        && d1.start >= d0.start
+        && d1.start < d0.end) {
+      d1.start = -1;
+      d0.end = d1.end;
+      d1 = d0;
+    }
+  }
+
+  // Returns the start index of the excerpt for the specified mention.
+  function excerptStart(mention) {
+    var i = sentenceRe.lastIndex = Math.max(mention.section.i, mention.i - 80), match;
+    while (match = sentenceRe.exec(mention.section.speech.text)) {
+      if (match.index < mention.i - 20) return match.index + match[0].length;
+      if (i <= mention.section.i) break;
+      sentenceRe.lastIndex = i = Math.max(mention.section.i, i - 20);
+    }
+    return mention.section.i;
+  }
+
+  // Returns the end index of the excerpt for the specified mention.
+  function excerptEnd(mention) {
+    var i = mention.section.j, match;
+    sentenceRe.lastIndex = mention.j + 40;
+    match = sentenceRe.exec(mention.section.speech.text);
+    return match ? Math.min(match.index + match[1].length, i) : i;
+  }
+
+  return mentions.filter(function(d) { return d.start >= 0; });
+}
+
+// Orders mentions chronologically: by speech and position within speech.
+function orderMentions(a, b) {
+  return a.section.speech.id - b.section.speech.id || a.i - b.i;
+}
+
+// Assign event handlers to topic links.
+function linkTopic(a) {
+  a   .on("click", click)
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout);
+}
+
+// Returns the topic matching the specified name, approximately.
+// If no matching topic is found, returns undefined.
+function findTopic(name) {
+  for (var i = 0, n = data.topics.length, t; i < n; ++i) {
+    if ((t = data.topics[i]).name === name || new RegExp("^" + (t = data.topics[i]).re.source + "$", "i").test(name)) {
+      return t;
+    }
+  }
+}
+
+// Returns the topic matching the specified name, approximately.
+// If no matching topic is found, a new one is created.
+function findOrAddTopic(name) {
+  var topic = findTopic(name);
+  // if (!topic) {
+  //   topic = data.topic(name.substring(0, 1).toUpperCase() + name.substring(1));
+  //   topic.y = 0;
+  //   updateTopics(data.topics);
+  // }
+  return topic;
+}
+
+// Simulate forces and update node and label positions on tick.
+function tick(e) {
+  node
+      .each(bias(e.alpha * 105))
+      .each(collide(.5))
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  label
+      .style("left", function(d) { return (d.x - d.dx / 2) + "px"; })
+      .style("top", function(d) { return (d.y - d.dy / 2) + "px"; });
+
+  arrow.style("stroke-opacity", function(d) {
+    var dx = d.x - d.cx, dy = d.y - d.cy;
+    return dx * dx + dy * dy < d.r * d.r ? 1: 0;
+  });
+}
+
+// A left-right bias causing topics to orient by party preference.
+function bias(alpha) {
+  return function(d) {
+    d.x += d.bias * alpha;
+  };
+}
+
+// Resolve collisions between nodes.
+function collide(alpha) {
+  var q = d3.geom.quadtree(data.topics);
+  return function(d) {
+    var r = d.cr + maxRadius + collisionPadding,
+        nx1 = d.x - r,
+        nx2 = d.x + r,
+        ny1 = d.y - r,
+        ny2 = d.y + r;
+    q.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d) && d.other !== quad.point && d !== quad.point.other) {
+        var x = d.x - quad.point.x,
+            y = d.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.cr + quad.point.r + collisionPadding;
+        if (l < r) {
+          l = (l - r) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          quad.point.x += x;
+          quad.point.y += y;
+        }
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    });
+  };
+}
+
+// Fisher�㛝ates shuffle.
+function shuffle(array) {
+  var m = array.length, t, i;
+  while (m) {
+    i = Math.floor(Math.random() * m--);
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+  return array;
+}
+
+// Given two quantities a and b, returns the fraction to split the circle a + b.
+function fractionA(a, b, c) {
+  var k = a / (a + b + c);
+  if (k > 0 && k < 1) {
+    var t0, t1 = Math.pow(12 * k * Math.PI, 1 / 3);
+    for (var i = 0; i < 10; ++i) { // Solve for theta numerically.
+      t0 = t1;
+      t1 = (Math.sin(t0) - t0 * Math.cos(t0) + 2 * k * Math.PI) / (1 - Math.cos(t0));
+    }
+    k = (1 - Math.cos(t1 / 2)) / 2;
+  }
+  return k;
+}
+
+function fractionB(a, b, c) {
+  var k = b / (a + b + c);
+  if (k > 0 && k < 1) {
+    var t0, t1 = Math.pow(12 * k * Math.PI, 1 / 3);
+    for (var i = 0; i < 10; ++i) { // Solve for theta numerically.
+      t0 = t1;
+      t1 = (Math.sin(t0) - t0 * Math.cos(t0) + 2 * k * Math.PI) / (1 - Math.cos(t0));
+    }
+    k = (1 - Math.cos(t1 / 2)) / 2;
+  }
+  return k;
+}
+
+// Update the active topic on hashchange, perhaps creating a new topic.
+function hashchange() {
+  var name = decodeURIComponent(location.hash.substring(1)).trim();
+  updateActiveTopic(name && name != "!" ? findOrAddTopic(name) : null);
+}
+
+// Trigger a hashchange on submit.
+function submit() {
+  var name = this.search.value.trim();
+  location.hash = name ? encodeURIComponent(name) : "!";
+  this.search.value = "";
+  d3.event.preventDefault();
+}
+
+// Clear the active topic when clicking on the chart background.
+function clear() {
+  location.replace("#!");
+}
+
+// Rather than flood the browser history, use location.replace.
+function click(d) {
+  location.replace("#" + encodeURIComponent(d === activeTopic ? "!" : d.name));
+  d3.event.preventDefault();
+}
+
+// When hovering the label, highlight the associated node and vice versa.
+// When no topic is active, also cross-highlight with any mentions in excerpts.
+function mouseover(d) {
+  node.classed("g-hover", function(p) { return p === d; });
+  if (!activeTopic) d3.selectAll(".g-mention p").classed("g-hover", function(p) { return p.topic === d; });
+}
+
+// When hovering the label, highlight the associated node and vice versa.
+// When no topic is active, also cross-highlight with any mentions in excerpts.
+function mouseout(d) {
+  node.classed("g-hover", false);
+  if (!activeTopic) d3.selectAll(".g-mention p").classed("g-hover", false);
+}
+
+})();
+
+</script>
