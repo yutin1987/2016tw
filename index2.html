@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>2016tw</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
+  <link rel="stylesheet" type="text/css" href="sequences.css"/>
+  </head>
+<body>
+  <div id="main">
+    <div id="sequence"></div>
+    <div id="chart">
+      <div id="explanation" style="visibility: hidden;">
+        <span id="percentage"></span><br/>
+        <span id="total"></span>
+      </div>
+    </div>
+  </div>
+  <!-- <div id="sidebar">
+    <input type="checkbox" id="togglelegend"> Legend<br/>
+    <div id="legend" style="visibility: hidden;"></div>
+  </div> -->
+</body>
+
+<script>
+
+var width = 960,
+    height = 700,
+    radius = Math.min(width, height) / 2;
+
+var x = d3.scale.linear()
+    .range([0, 2 * Math.PI]);
+
+var y = d3.scale.sqrt()
+    .range([0, radius]);
+
+var color = d3.scale.category20c();
+
+var b = {
+  w: 75, h: 30, s: 3, t: 10
+};
+
+var colorMain = {
+  "國民黨": "#5687d1",
+  "民進黨": "#6ab975",
+  "親民黨": "#de783b",
+  "未領票": "#7b615c",
+  "無效票": "#e74c3c",
+  "全國": "#fff"
+};
+
+var svg = d3.select("#chart").append("svg:svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("svg:g")
+    .attr("id", "container")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+var partition = d3.layout.partition()
+    .sort(null)
+    .value(function(d) { return d.value; });
+
+var arc = d3.svg.arc()
+    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+    .innerRadius(function(d) { return Math.max(0, y(d.y)); })
+    .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
+
+// Keep track of the node that is currently being displayed as the root.
+var node;
+var info = {
+  total: 0 
+};
+
+d3.json("sunburst.json", function(error, root) {
+  initializeBreadcrumbTrail();
+
+  node = root;
+  var path = svg.datum(root)
+        .selectAll("path")
+        .data(partition.nodes)
+        .enter()
+        .append("path")
+        .attr("d", arc)
+        .style("fill", function(d) {
+          if (colorMain[d.name]) {
+            return colorMain[d.name];
+          } else {
+            return color((d.children ? d : d.parent).name);
+          }
+        })
+        .each(stash)
+        .on("click", click)
+        .on("mouseover", mouseover);
+
+  info.total = path.node().__data__.value;
+
+  d3.selectAll("input").on("change", function change() {
+    var value = function(d) { return d.value; };
+
+    path
+      .data(partition.value(value).nodes)
+      .transition()
+      .duration(1000)
+      .attrTween("d", arcTweenData)
+      .on("mouseover", mouseover);
+
+    // info.total = path.node().__data__.value;
+  });
+
+  function click(d) {
+    node = d;
+    path.transition()
+      .duration(1000)
+      .attrTween("d", arcTweenZoom(d));
+
+    info.total = d.value;
+  }
+});
+
+d3.select(self.frameElement).style("height", height + "px");
+
+// Setup for switching data: stash the old values for transition.
+function stash(d) {
+  d.x0 = d.x;
+  d.dx0 = d.dx;
+}
+
+// When switching data: interpolate the arcs in data space.
+function arcTweenData(a, i) {
+  var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+  function tween(t) {
+    var b = oi(t);
+    a.x0 = b.x;
+    a.dx0 = b.dx;
+    return arc(b);
+  }
+  if (i == 0) {
+    var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+    return function(t) {
+      x.domain(xd(t));
+      return tween(t);
+    };
+  } else {
+    return tween;
+  }
+}
+
+// When zooming: interpolate the scales.
+function arcTweenZoom(d) {
+  var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+      yd = d3.interpolate(y.domain(), [d.y, 1]),
+      yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+  return function(d, i) {
+    return i
+        ? function(t) { return arc(d); }
+        : function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
+  };
+}
+
+function mouseover(d) {
+
+  var percentage = (100 * d.value / info.total).toPrecision(3);
+  var percentageString = percentage + "%";
+
+  d3.select("#percentage")
+      .text(percentageString);
+
+  d3.select("#total")
+      .text(d.value);
+
+  d3.select("#explanation")
+      .style("visibility", "");
+
+  var sequenceArray = getAncestors(d);
+  updateBreadcrumbs(sequenceArray, percentageString);
+
+  // Fade all the segments.
+  d3.selectAll("path")
+      .style("opacity", 0.3);
+
+  // Then highlight only those that are an ancestor of the current segment.
+  svg.selectAll("path")
+      .filter(function(node) {
+                return (sequenceArray.indexOf(node) >= 0);
+              })
+      .style("opacity", 1);
+}
+
+function updateBreadcrumbs(nodeArray, percentageString) {
+
+  // Data join; key function combines name and depth (= position in sequence).
+  var g = d3.select("#trail")
+      .selectAll("g")
+      .data(nodeArray, function(d) { return d.name + d.depth; });
+
+  // Add breadcrumb and label for entering nodes.
+  var entering = g.enter().append("svg:g");
+
+  entering.append("svg:polygon")
+      .attr("points", breadcrumbPoints)
+      .style("fill", function(d) {
+        if (colorMain[d.name]) {
+          return colorMain[d.name];
+        } else {
+          return color((d.children ? d : d.parent).name);
+        }
+      });
+
+  entering.append("svg:text")
+      .attr("x", (b.w + b.t) / 2)
+      .attr("y", b.h / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .text(function(d) { return d.name; });
+
+  // Set position for entering and updating nodes.
+  g.attr("transform", function(d, i) {
+    return "translate(" + i * (b.w + b.s) + ", 0)";
+  });
+
+  // Remove exiting nodes.
+  g.exit().remove();
+
+  // Now move and update the percentage at the end.
+  d3.select("#trail").select("#endlabel")
+      .attr("x", (nodeArray.length + 0.5) * (b.w + b.s))
+      .attr("y", b.h / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .text(percentageString);
+
+  // Make the breadcrumb trail visible, if it's hidden.
+  d3.select("#trail")
+      .style("visibility", "");
+
+}
+
+function getAncestors(node) {
+  var path = [];
+  var current = node;
+  while (current.parent) {
+    path.unshift(current);
+    current = current.parent;
+  }
+  return path;
+}
+
+function breadcrumbPoints(d, i) {
+  var points = [];
+  points.push("0,0");
+  points.push(b.w + ",0");
+  points.push(b.w + b.t + "," + (b.h / 2));
+  points.push(b.w + "," + b.h);
+  points.push("0," + b.h);
+  if (i > 0) { // Leftmost breadcrumb; don't include 6th vertex.
+    points.push(b.t + "," + (b.h / 2));
+  }
+  return points.join(" ");
+}
+
+function initializeBreadcrumbTrail() {
+  // Add the svg area.
+  var trail = d3.select("#sequence").append("svg:svg")
+      .attr("width", width)
+      .attr("height", 50)
+      .attr("id", "trail");
+  // Add the label at the end, for the percentage.
+  trail.append("svg:text")
+    .attr("id", "endlabel")
+    .style("fill", "#000");
+}
+
+</script>
