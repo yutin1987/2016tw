@@ -113,6 +113,9 @@
                     <div class="progress-bar progress-bar-primary" style="width: {{row['總統']['國民黨P']}}%">
                       <span>{{row['總統']['國民黨P'] | percentage}}%</span>
                     </div>
+                    <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{row['總統']['其他政黨P']}}%">
+                      <span>{{row['總統']['其他政黨P'] | percentage}}%</span>
+                    </div>
                     <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{row['總統']['用餘票數P']}}%">
                       <span>{{row['總統']['用餘票數P'] | percentage}}%</span>
                     </div>
@@ -126,6 +129,9 @@
                   <div class="progress">
                     <div class="progress-bar progress-bar-primary" style="width: {{row['立委政黨']['國民黨P']}}%">
                       <span>{{row['立委政黨']['國民黨P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{row['立委政黨']['其他政黨P']}}%">
+                      <span>{{row['立委政黨']['其他政黨P'] | percentage}}%</span>
                     </div>
                     <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{row['立委政黨']['用餘票數P']}}%">
                       <span>{{row['立委政黨']['用餘票數P'] | percentage}}%</span>
@@ -187,10 +193,12 @@ angular
         item.keyword = item['縣市'] + item['區別'] + item['里別'];
         item['總統']['國民黨P'] = item['總統']['國民黨'] / item['總統']['選舉人數'] * 100;
         item['總統']['民進黨P'] = item['總統']['民進黨'] / item['總統']['選舉人數'] * 100;
-        item['總統']['用餘票數P'] = 100 - item['總統']['國民黨P'] - item['總統']['民進黨P'];
+        item['總統']['其他政黨P'] = item['總統']['其他政黨'] / item['總統']['選舉人數'] * 100;
+        item['總統']['用餘票數P'] = 100 - item['總統']['國民黨P'] - item['總統']['民進黨P'] - item['總統']['其他政黨P'];
         item['立委政黨']['國民黨P'] = item['立委政黨']['國民黨'] / item['立委政黨']['選舉人數'] * 100;
         item['立委政黨']['民進黨P'] = item['立委政黨']['民進黨'] / item['立委政黨']['選舉人數'] * 100;
-        item['立委政黨']['用餘票數P'] = 100 - item['立委政黨']['國民黨P'] - item['立委政黨']['民進黨P'];
+        item['立委政黨']['其他政黨P'] = item['立委政黨']['其他政黨'] / item['立委政黨']['選舉人數'] * 100;
+        item['立委政黨']['用餘票數P'] = 100 - item['立委政黨']['國民黨P'] - item['立委政黨']['民進黨P'] - item['立委政黨']['其他政黨P'];
       });
     });
 
