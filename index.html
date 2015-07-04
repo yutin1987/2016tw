@@ -95,6 +95,47 @@
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td>加總</td>
+                <td></td>
+                <td></td>
+                <td>
+                  總統:
+                  <span class="label label-primary">{{total['總統']['國民黨']}}</span>
+                  <span class="label label-success">{{total['總統']['民進黨']}}</span>
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-primary" style="width: {{total['總統']['國民黨P']}}%">
+                      <span>{{total['總統']['國民黨P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{total['總統']['其他政黨P']}}%">
+                      <span>{{total['總統']['其他政黨P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{total['總統']['用餘票數P']}}%">
+                      <span>{{total['總統']['用餘票數P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-success" style="width: {{total['總統']['民進黨P']}}%">
+                      <span>{{total['總統']['民進黨P'] | percentage}}%</span>
+                    </div>
+                  </div>
+                  政黨:
+                  <span class="label label-primary">{{total['立委政黨']['國民黨']}}</span>
+                  <span class="label label-success">{{total['立委政黨']['民進黨']}}</span>
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-primary" style="width: {{total['立委政黨']['國民黨P']}}%">
+                      <span>{{total['立委政黨']['國民黨P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{total['立委政黨']['其他政黨P']}}%">
+                      <span>{{total['立委政黨']['其他政黨P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{total['立委政黨']['用餘票數P']}}%">
+                      <span>{{total['立委政黨']['用餘票數P'] | percentage}}%</span>
+                    </div>
+                    <div class="progress-bar progress-bar-success" style="width: {{total['立委政黨']['民進黨P']}}%">
+                      <span>{{total['立委政黨']['民進黨P'] | percentage}}%</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
               <tr ng-repeat="row in data | advancefilter: query">
                 <td>
                   {{row['縣市']}}
@@ -151,6 +192,35 @@
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js"></script>
 <script>
+var total = {
+  "總統": {
+    "民進黨": 0,
+    "國民黨": 0,
+    "其他政黨": 0,
+    "有效票數": 0,
+    "無效票數": 0,
+    "投票數": 0,
+    "已領未投票數": 0,
+    "發出票數": 0,
+    "用餘票數": 0,
+    "選舉人數": 0,
+    "投票率": 0
+  },
+  "立委政黨": {
+    "民進黨": 0,
+    "國民黨": 0,
+    "其他政黨": 0,
+    "有效票數": 0,
+    "無效票數": 0,
+    "投票數": 0,
+    "已領未投票數": 0,
+    "發出票數": 0,
+    "用餘票數": 0,
+    "選舉人數": 0,
+    "投票率": 0
+  }
+};
+
 angular
 .module('app', [])
 .filter('advancefilter', [
@@ -166,10 +236,71 @@ angular
       angular.forEach(textArr, function(text){
         if (text) {
           data = data.filter(function(item) {
-            return item.keyword.search(text) > -1;
+            if (item['縣市'] == "加總") {
+              return true;
+            } else {
+              return item.keyword.search(text) > -1;
+            }
           });
         }
       });
+
+      total["總統"]["民進黨"] = 0;
+      total["總統"]["國民黨"] = 0;
+      total["總統"]["其他政黨"] = 0;
+      total["總統"]["有效票數"] = 0;
+      total["總統"]["無效票數"] = 0;
+      total["總統"]["投票數"] = 0;
+      total["總統"]["已領未投票數"] = 0;
+      total["總統"]["發出票數"] = 0;
+      total["總統"]["用餘票數"] = 0;
+      total["總統"]["選舉人數"] = 0;
+      total["總統"]["投票率"] = 0;
+      total["立委政黨"]["民進黨"] = 0;
+      total["立委政黨"]["國民黨"] = 0;
+      total["立委政黨"]["其他政黨"] = 0;
+      total["立委政黨"]["有效票數"] = 0;
+      total["立委政黨"]["無效票數"] = 0;
+      total["立委政黨"]["投票數"] = 0;
+      total["立委政黨"]["已領未投票數"] = 0;
+      total["立委政黨"]["發出票數"] = 0;
+      total["立委政黨"]["用餘票數"] = 0;
+      total["立委政黨"]["選舉人數"] = 0;
+      total["立委政黨"]["投票率"] = 0;
+
+      data.forEach(function(item) {
+        total["總統"]["民進黨"] += item["總統"]["民進黨"] || 0;
+        total["總統"]["國民黨"] += item["總統"]["國民黨"] || 0;
+        total["總統"]["其他政黨"] += item["總統"]["其他政黨"] || 0;
+        total["總統"]["有效票數"] += item["總統"]["有效票數"] || 0;
+        total["總統"]["無效票數"] += item["總統"]["無效票數"] || 0;
+        total["總統"]["投票數"] += item["總統"]["投票數"] || 0;
+        total["總統"]["已領未投票數"] += item["總統"]["已領未投票數"] || 0;
+        total["總統"]["發出票數"] += item["總統"]["發出票數"] || 0;
+        total["總統"]["用餘票數"] += item["總統"]["用餘票數"] || 0;
+        total["總統"]["選舉人數"] += item["總統"]["選舉人數"] || 0;
+        total["總統"]["投票率"] += item["總統"]["投票率"] || 0;
+        total["立委政黨"]["民進黨"] += item["立委政黨"]["民進黨"] || 0;
+        total["立委政黨"]["國民黨"] += item["立委政黨"]["國民黨"] || 0;
+        total["立委政黨"]["其他政黨"] += item["立委政黨"]["其他政黨"] || 0;
+        total["立委政黨"]["有效票數"] += item["立委政黨"]["有效票數"] || 0;
+        total["立委政黨"]["無效票數"] += item["立委政黨"]["無效票數"] || 0;
+        total["立委政黨"]["投票數"] += item["立委政黨"]["投票數"] || 0;
+        total["立委政黨"]["已領未投票數"] += item["立委政黨"]["已領未投票數"] || 0;
+        total["立委政黨"]["發出票數"] += item["立委政黨"]["發出票數"] || 0;
+        total["立委政黨"]["用餘票數"] += item["立委政黨"]["用餘票數"] || 0;
+        total["立委政黨"]["選舉人數"] += item["立委政黨"]["選舉人數"] || 0;
+        total["立委政黨"]["投票率"] += item["立委政黨"]["投票率"] || 0;
+      });
+
+      total['總統']['國民黨P'] = total['總統']['國民黨'] / total['總統']['選舉人數'] * 100;
+      total['總統']['民進黨P'] = total['總統']['民進黨'] / total['總統']['選舉人數'] * 100;
+      total['總統']['其他政黨P'] = total['總統']['其他政黨'] / total['總統']['選舉人數'] * 100;
+      total['總統']['用餘票數P'] = 100 - total['總統']['國民黨P'] - total['總統']['民進黨P'] - total['總統']['其他政黨P'];
+      total['立委政黨']['國民黨P'] = total['立委政黨']['國民黨'] / total['立委政黨']['選舉人數'] * 100;
+      total['立委政黨']['民進黨P'] = total['立委政黨']['民進黨'] / total['立委政黨']['選舉人數'] * 100;
+      total['立委政黨']['其他政黨P'] = total['立委政黨']['其他政黨'] / total['立委政黨']['選舉人數'] * 100;
+      total['立委政黨']['用餘票數P'] = 100 - total['立委政黨']['國民黨P'] - total['立委政黨']['民進黨P'] - total['立委政黨']['其他政黨P'];
 
       return data;
     };
@@ -186,6 +317,7 @@ angular
 .controller('MainController',
   function ($http, $scope) {
     $scope.data = [];
+    $scope.total = total;
 
     $http.get('./total.json').success(function (data) {
       $scope.data = data;
